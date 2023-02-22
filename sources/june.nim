@@ -33,9 +33,12 @@ export
 
 const june_header = "<june.h>"
 
-proc initialiseJune() {.header: june_header, importcpp: "june::initialiseJune()".}
-proc initialiseApplication(application: ptr JUCEApplication): bool {.header: june_header, importcpp: "june::initialiseApplication(@)".}
-proc shutdownApplication(application: ptr JUCEApplication): int {.header: june_header, importcpp: "june::shutdownApplication(@)".}
+proc initialiseJune() {.header: june_header,
+    importcpp: "june::initialiseJune()".}
+proc initialiseApplication(application: ptr JUCEApplication): bool {.header: june_header,
+    importcpp: "june::initialiseApplication(@)".}
+proc shutdownApplication(application: ptr JUCEApplication): int {.header: june_header,
+    importcpp: "june::shutdownApplication(@)".}
 
 var messageManager: ptr MessageManager = nil
 
@@ -50,52 +53,52 @@ proc ctrlc() {.noconv.} =
 
 
 proc START_JUCE_APPLICATION*(createApplication: (proc(): ptr JUCEApplication)) =
-    echo "START_JUCE_APPLICATION enter..."
+  echo "START_JUCE_APPLICATION enter..."
 
-    initialiseJune()
+  initialiseJune()
 
-    initialiseJuce_GUI()
+  initialiseJuce_GUI()
 
-    var result = QuitSuccess
-    var application: ptr JUCEApplication = nil
+  var result = QuitSuccess
+  var application: ptr JUCEApplication = nil
 
-    messageManager = MessageManager.getInstance()
-    messageManager[].setCurrentThreadAsMessageThread()
+  messageManager = MessageManager.getInstance()
+  messageManager[].setCurrentThreadAsMessageThread()
 
-    setControlCHook(ctrlc)
+  setControlCHook(ctrlc)
 
-    try:
-        echo "Creating application..."
+  try:
+    echo "Creating application..."
 
-        application = createApplication()
+    application = createApplication()
 
-        echo "Initialising application..."
+    echo "Initialising application..."
 
-        if isNil(application) or not initialiseApplication(application):
-            raise newException(OSError, "failed initialising june application")
+    if isNil(application) or not initialiseApplication(application):
+      raise newException(OSError, "failed initialising june application")
 
-        echo "Starting message loop..."
+    echo "Starting message loop..."
 
-        messageManager[].runDispatchLoop()
+    messageManager[].runDispatchLoop()
 
-        echo "Finishing message loop..."
+    echo "Finishing message loop..."
 
-    except:
-        let exception = getCurrentException()
-        echo "Exception: " & exception.msg
-        echo exception.getStackTrace()
+  except:
+    let exception = getCurrentException()
+    echo "Exception: " & exception.msg
+    echo exception.getStackTrace()
 
-        result = QuitFailure
+    result = QuitFailure
 
-    finally:
-        echo "Finalizing application..."
+  finally:
+    echo "Finalizing application..."
 
-        if not isNil(application):
-            result = shutdownApplication(application)
-            cdelete application
+    if not isNil(application):
+      result = shutdownApplication(application)
+      cdelete application
 
-    shutdownJuce_GUI()
+  shutdownJuce_GUI()
 
-    echo "START_JUCE_APPLICATION exit..."
+  echo "START_JUCE_APPLICATION exit..."
 
-    quit(result)
+  quit(result)

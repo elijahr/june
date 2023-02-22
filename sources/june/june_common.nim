@@ -9,8 +9,8 @@ import std/strutils
 
 type
   #wcharConstImpl {.importc:"const wchar_t*".} = object
-  cstringConstImpl {.importc:"const char*".} = cstring
-  voidpConstImpl {.importc:"const void*".} = pointer
+  cstringConstImpl {.importc: "const char*".} = cstring
+  voidpConstImpl {.importc: "const void*".} = pointer
   #juce_wchar* = distinct wcharConstImpl
   constChar* = distinct cstringConstImpl
   constPointer* = distinct voidpConstImpl

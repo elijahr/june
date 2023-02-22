@@ -21,7 +21,8 @@ type
 
 
 proc makeCppType(node: NimNode): CppType {.compiletime.} =
-  result = CppType(node: node, nim: newEmptyNode(), ident: "", cpp: "", isConst: false, isPointer: false, isReference: false)
+  result = CppType(node: node, nim: newEmptyNode(), ident: "", cpp: "",
+      isConst: false, isPointer: false, isReference: false)
 
   var realNode = node
   if realNode.kind == nnkIdentDefs:
@@ -64,7 +65,8 @@ proc newEmitPragma(s: string): NimNode {.compileTime.} =
   result.add(newColonExpr(newIdentNode("emit"), newStrLitNode(s)))
 
 
-proc juneClassCodegen(class: NimNode, body: NimNode, internalClass: bool, parentNamespace: string = ""): NimNode {.compileTime.} =
+proc juneClassCodegen(class: NimNode, body: NimNode, internalClass: bool,
+    parentNamespace: string = ""): NimNode {.compileTime.} =
   # echo body.astGenRepr
 
   if class.kind != nnkInfix or not eqIdent(class[0], "of"):
@@ -84,12 +86,14 @@ proc juneClassCodegen(class: NimNode, body: NimNode, internalClass: bool, parent
 
   var cppIncludeDefinition = "#pragma once\n\n"
   if not internalClass:
-      cppIncludeDefinition &= "#include \"" & cppIncludedHeader & "\"\n"
+    cppIncludeDefinition &= "#include \"" & cppIncludedHeader & "\"\n"
 
   var cppClassDefinition = ""
   cppClassDefinition &= "namespace june { using namespace juce;\n\n"
-  cppClassDefinition &= "struct " & className & " : " & parentNamespace & "::" & parentClassName & " {\n"
-  cppClassDefinition &= "    using " & parentNamespace & "::" & parentClassName & "::" & parentClassName & ";\n\n"
+  cppClassDefinition &= "struct " & className & " : " & parentNamespace & "::" &
+      parentClassName & " {\n"
+  cppClassDefinition &= "    using " & parentNamespace & "::" &
+      parentClassName & "::" & parentClassName & ";\n\n"
 
   for node in body.children:
     case node.kind:
@@ -102,7 +106,8 @@ proc juneClassCodegen(class: NimNode, body: NimNode, internalClass: bool, parent
       let hasReturnValue = returnValue.cpp != "void"
 
       # Nim codegen function parameters
-      var nimFunctionMemberName = "CppFunctionObject" & (if hasReturnValue: "R" else: "N") & $(formalParams.len - 1)
+      var nimFunctionMemberName = "CppFunctionObject" & (
+          if hasReturnValue: "R" else: "N") & $(formalParams.len - 1)
       var nimFunctionMemberType = (if hasReturnValue or formalParams.len > 1:
         nnkBracketExpr.newTree ident(nimFunctionMemberName)
       else:
@@ -114,7 +119,8 @@ proc juneClassCodegen(class: NimNode, body: NimNode, internalClass: bool, parent
       # Cpp codegen function parameters
       var cppFuncSignature = ""
       var cppFuncPointerSignature = ""
-      cppFuncPointerSignature &= "    std::function<" & toCppString(returnValue) & "("
+      cppFuncPointerSignature &= "    std::function<" & toCppString(
+          returnValue) & "("
       cppFuncSignature &= "    " & toCppString(returnValue) & " " & funcName & "("
 
       var index = 0
@@ -148,7 +154,8 @@ proc juneClassCodegen(class: NimNode, body: NimNode, internalClass: bool, parent
       )
 
       # Cpp codegen function declaration
-      cppFuncPointerSignature = cppFuncPointerSignature.strip(leading = false) & ")> " & funcPointerName & ";"
+      cppFuncPointerSignature = cppFuncPointerSignature.strip(leading = false) &
+          ")> " & funcPointerName & ";"
 
       cppFuncSignature &= ") override { if (" & funcPointerName & ") "
       if hasReturnValue: cppFuncSignature &= "return "
@@ -206,7 +213,8 @@ proc juneClassCodegen(class: NimNode, body: NimNode, internalClass: bool, parent
       cppIncludeDefinition &= "    #include " & typeInclude & "\n"
       cppIncludeDefinition &= "#endif\n\n"
 
-      cppClassDefinition &= "    " & variableType & " " & variableName & variableDefault & ";\n"
+      cppClassDefinition &= "    " & variableType & " " & variableName &
+          variableDefault & ";\n"
 
     of nnkVarSection:
       # TODO
@@ -235,26 +243,26 @@ proc juneClassCodegen(class: NimNode, body: NimNode, internalClass: bool, parent
         nnkPostfix.newTree(
           ident("*"),
           ident(className)
-        ),
-        nnkPragma.newTree(
-          nnkExprColonExpr.newTree(
-            ident("importcpp"),
-            newLit("june::" & className)
-          ),
-          nnkExprColonExpr.newTree(
-            ident("header"),
-            newLit(cppGeneratedHeader)
-          )
-        )
+    ),
+    nnkPragma.newTree(
+      nnkExprColonExpr.newTree(
+        ident("importcpp"),
+        newLit("june::" & className)
       ),
+      nnkExprColonExpr.newTree(
+        ident("header"),
+        newLit(cppGeneratedHeader)
+      )
+    )
+  ),
       newEmptyNode(),
       nnkObjectTy.newTree(
         newEmptyNode(),
         nnkOfInherit.newTree(
           ident(parentClassName & appendType)
-        ),
-        nimObjectBodyDecl
-      )
+    ),
+    nimObjectBodyDecl
+  )
     )
   )
 
@@ -262,8 +270,8 @@ proc juneClassCodegen(class: NimNode, body: NimNode, internalClass: bool, parent
 
 
 macro defineCppClassInternal*(class: untyped, body: untyped) =
-  result = juneClassCodegen(class, body, true, parentNamespace="juce")
+  result = juneClassCodegen(class, body, true, parentNamespace = "juce")
 
 
 macro defineCppClass*(class: untyped, body: untyped) =
-  result = juneClassCodegen(class, body, false, parentNamespace="june")
+  result = juneClassCodegen(class, body, false, parentNamespace = "june")

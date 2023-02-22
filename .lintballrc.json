@@ -1,0 +1,36 @@
+{
+  "check_args": {
+    "yamllint": "-c ./.yamllint.yml"
+  },
+  "write_args": {
+    "yamllint": "-c ./.yamllint.yml"
+  },
+  "use": {
+    "nimfmt": false,
+    "pylint": false,
+    "uncrustify:": false
+  },
+  "ignores": [
+    "*/.build/*",
+    "*/.bundle/*",
+    "*/.cache/*",
+    "*/.git/*",
+    "*/.hg/*",
+    "*/.next/*",
+    "*/.serverless_nextjs/*",
+    "*/.tmp/*",
+    "*/.tox/*",
+    "*/__pycache__/*",
+    "*/build/*",
+    "*/Cargo.lock",
+    "*/dist/*",
+    "*/Gemfile.lock",
+    "*/node_modules/*",
+    "*/package-lock.json",
+    "*/Pipfile.lock",
+    "*/target/*",
+    "*/tmp/*",
+    "*/vendor/*",
+    "*/JUCE/*"
+  ]
+}

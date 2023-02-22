@@ -25,7 +25,8 @@ proc createApplication(): ptr JUCEApplication =
 
         var windowName = application[].getApplicationName()
 
-        application[].window = newDocumentWindow(windowName, makeColour(50'u8, 62'u8, 68'u8, 255'u8), DocumentWindow_allButtons, true)
+        application[].window = newDocumentWindow(windowName, makeColour(50'u8,
+                62'u8, 68'u8, 255'u8), DocumentWindow_allButtons, true)
         application[].window[].onCloseButtonPressed = bindClosure(proc() = JUCEApplication.getInstance().systemRequestedQuit())
         application[].window[].setResizable(true, true)
         application[].window[].centreWithSize(640, 480)
