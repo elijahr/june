@@ -5,6 +5,9 @@
 #
 # This file may not be copied, modified, or distributed except according to those terms.
 
+import std/[compilesettings, macros, os, strutils]
+
+const june_cache_dir = querySetting(SingleValueSetting.nimcacheDir)
 
 type
   CppType = object

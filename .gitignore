@@ -12,3 +12,6 @@ __pycache__/
 *.app
 *.dSYM
 
+tests/*
+!tests/*.nim
+!tests/nim.cfg

@@ -6,32 +6,38 @@
 # This file may not be copied, modified, or distributed except according to those terms.
 
 import system
-import std/os
-import std/compilesettings
 
-when not defined(cpp):
-  {.error: "C++ backend required to use nimpp".}
+import june/[
+  june_common,
+  june_function_utils,
+  june_cpp_utils,
+  juce_core,
+  juce_events,
+  juce_data_structures,
+  juce_graphics,
+  juce_gui_basics
+]
+
+export
+  june_common,
+  june_function_utils,
+  june_cpp_utils,
+  juce_core,
+  juce_events,
+  juce_data_structures,
+  juce_graphics,
+  juce_gui_basics
+
+# when not defined(cpp):
+#   {.error: "C++ backend required to use nimpp".}
 
 const june_header = "<june.h>"
-const june_cache_dir = querySetting(SingleValueSetting.nimcacheDir)
-
-include june/june_common
-include june/june_function_utils
-include june/june_cpp_utils
-include june/juce_core
-include june/juce_events
-include june/juce_data_structures
-include june/juce_graphics
-include june/juce_gui_basics
-
 
 proc initialiseJune() {.header: june_header, importcpp: "june::initialiseJune()".}
 proc initialiseApplication(application: ptr JUCEApplication): bool {.header: june_header, importcpp: "june::initialiseApplication(@)".}
 proc shutdownApplication(application: ptr JUCEApplication): int {.header: june_header, importcpp: "june::shutdownApplication(@)".}
 
-
 var messageManager: ptr MessageManager = nil
-
 
 proc ctrlc() {.noconv.} =
   echo "Handling Control+C"

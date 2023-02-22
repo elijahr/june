@@ -5,6 +5,8 @@
 #
 # This file may not be copied, modified, or distributed except according to those terms.
 
+import ./june_common
+
 const juce_data_structures = "<juce_data_structures/juce_data_structures.h>"
 
 type
@@ -162,8 +164,4 @@ proc getUserSettings*(this: var ApplicationProperties): ptr PropertiesFile {.hea
 proc getCommonSettings*(this: var ApplicationProperties, returnUserPropsIfReadOnly: bool): ptr PropertiesFile {.header: juce_data_structures, importcpp: "#.getCommonSettings(@)".}
 proc saveIfNeeded*(this: var ApplicationProperties): bool {.header: juce_data_structures, importcpp: "#.saveIfNeeded()".}
 proc closeFiles*(this: var ApplicationProperties) {.header: juce_data_structures, importcpp: "#.closeFiles()".}
-
-
-
-include juce_data_structures_lifting
 

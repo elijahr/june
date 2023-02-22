@@ -5,8 +5,9 @@
 #
 # This file may not be copied, modified, or distributed except according to those terms.
 
-const juce_events = "<juce_events/juce_events.h>"
+import ./juce_core
 
+const juce_events = "<juce_events/juce_events.h>"
 
 type
   ActionListener* {.header: juce_events, importcpp: "juce::ActionListener".} = object
@@ -181,5 +182,7 @@ type
   NetworkServiceDiscoveryAvailableServiceList* {.header: juce_events, importcpp: "juce::NetworkServiceDiscovery::AvailableServiceList".} = object
 
 
-include juce_events_lifting
+proc initialiseJuce_GUI*() {.header: juce_events, importcpp: "juce::initialiseJuce_GUI()".}
+proc shutdownJuce_GUI*() {.header: juce_events, importcpp: "juce::shutdownJuce_GUI()".}
 
+proc getInstance*(this: typedesc[MessageManager]): ptr MessageManager {.header: juce_events, importcpp: "juce::MessageManager::getInstance()".}

@@ -5,6 +5,8 @@
 #
 # This file may not be copied, modified, or distributed except according to those terms.
 
+import ./june_common
+
 const juce_graphics = "<juce_graphics/juce_graphics.h>"
 
 type
@@ -749,8 +751,3 @@ type
 
 # proc setGlowProperties*(this: var GlowEffect, newRadius: float, newColour: Colour, offset: Point<int> = ) {.header: juce_graphics, importcpp: "#.setGlowProperties(@)".}
 proc applyEffect*(this: var GlowEffect, arg1: var Image, arg2: var Graphics, scaleFactor: float, alpha: float) {.header: juce_graphics, importcpp: "#.applyEffect(@)".}
-
-
-
-include juce_graphics_lifting
-
