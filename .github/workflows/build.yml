@@ -76,6 +76,7 @@ jobs:
           SANITIZE_THREADS=${{ matrix.sanitize-threads }}
           . "${HOME}/.asdf/asdf.sh"
           asdf local nim ${{ matrix.nim-version }}
+          nimble juce_debug
           nimble develop -y
           nimble test
           nimble examples
@@ -151,6 +152,7 @@ jobs:
 
             # Run tests
             echo "::group::Run tests"
+            nimble juce_debug
             nimble develop -y
             nimble test
             nimble examples
