@@ -48,13 +48,15 @@ jobs:
     steps:
       # Optimization: re-use cached Nim->C compilation
       - name: Restore cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${HOME}/.cache
           key: cache-${{ matrix.runs-on }}-${{ matrix.nim-version }}
 
       - name: Checkout project
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
 
       - name: Install Nim
         uses: asdf-vm/actions/install@v1
@@ -92,13 +94,15 @@ jobs:
     steps:
       # Optimization: re-use cached Nim->C compilation
       - name: Restore cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${HOME}/.cache
           key: cache-${{ matrix.arch }}-${{ matrix.nim-version }}
 
       - name: Checkout Nim project
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
 
       # Install & run tests on non-x86
       - uses: uraimo/run-on-arch-action@v2
